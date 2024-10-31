@@ -1,0 +1,75 @@
+﻿@model IEnumerable<SmallClinicProject.Models.Patient>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lista pacijenata</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+</head>
+<body>
+    <div class="container mt-4">
+        <h2>Lista pacijenata</h2>
+
+        <form id="searchForm" class="mb-3" onsubmit="return false;">
+            <div class="input-group">
+                <input type="text" id="searchQuery" class="form-control" placeholder="Pretraži po imenu ili prezimenu">
+                <button type="button" class="btn btn-primary" onclick="searchPatients()">Pretraži</button>
+            </div>
+        </form>
+
+        <div id="patientList">
+            <table class="table table-striped mt-3">
+                <thead>
+                    <tr>
+                        <th>Ime</th>
+                        <th>Prezime</th>
+                        <th>Datum rođenja</th>
+                        <th>JMBG</th>
+                        <th>Adresa</th>
+                        <th>Broj telefona</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var patient in Model)
+                    {
+                        <tr>
+                            <td>@(patient?.FirstName ?? "N/A")</td>
+                            <td>@(patient?.LastName ?? "N/A")</td>
+                            <td>@(patient.DateOfBirth.ToString("d"))</td>
+                            <td>@(patient?.UniqueIdentificationNumber.ToString() ?? "N/A")</td>
+                            <td>@(patient?.Address ?? "N/A")</td>
+                            <td>@(patient?.PhoneNumber ?? "N/A")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+       <a asp-controller="Admissions" asp-action="Index" class="btn btn-secondary">Nazad</a>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- AJAX Script for Search -->
+    <script>
+        function searchPatients() {
+            var query = $('#searchQuery').val();
+
+            $.ajax({
+                url: '@Url.Action("Search", "Patients")', 
+                type: 'GET',
+                data: { searchQuery: query },
+                success: function (result) {
+                    $('#patientList').html(result); 
+                },
+                error: function () {
+                    alert('Došlo je do greške prilikom pretrage.');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,246 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Evidencija prijema pacijenata</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .center-content {
+            text-align: center;
+            vertical-align: middle;
+            line-height: normal;
+        }
+
+            .center-content i {
+                font-size: 1.2rem;
+                color: #dc3545;
+            }
+
+        .icon-btn {
+            background-color: #66b2ff;
+            text-decoration: none;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            padding: 0.5em;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .icon-btn:hover {
+                background-color: #3399ff;
+                color: white;
+            }
+
+        .form-container {
+            width: 100%;
+        }
+
+        .filter-fields {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            align-items: flex-end;
+        }
+
+        .form-group {
+            flex: 1 1 20%;
+            display: flex;
+            flex-direction: column;
+        }
+
+            .form-group label {
+                font-weight: bold;
+                margin-bottom: 5px;
+            }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+            .button-group .btn {
+                width: 100px;
+                height: 38px; 
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0;
+            }
+
+        .btn {
+            height: 38px;
+        }
+    </style>
+</head>
+<body>
+    @model SmallClinicProject.Models.AdmissionFilterViewModel
+
+    <div class="container mt-4">
+        <h2>Evidencija prijema pacijenata</h2>
+
+        <form asp-action="Index" method="get" onsubmit="return validateDateRange()" class="form-container">
+            <div class="filter-fields d-flex">
+
+                <div class="form-group flex-fill">
+                    <label for="fromDate">Datum od</label>
+                    <input asp-for="FromDate" type="date" class="form-control" id="fromDate" />
+                    <span class="text-danger" id="fromDateError"></span>
+                </div>
+                <div class="form-group flex-fill">
+                    <label for="toDate">Datum do</label>
+                    <input asp-for="ToDate" type="date" class="form-control" id="toDate" />
+                    <span class="text-danger" id="toDateError"></span>
+                </div>
+                <div class="form-group flex-fill">
+                    <label for="patientName">Pacijent</label>
+                    <input asp-for="PatientName" type="text" class="form-control" id="patientName" placeholder="Unesite ime pacijenta" />
+                </div>
+                <div class="form-group flex-fill">
+                    <label for="doctorName">Ljekar</label>
+                    <input asp-for="DoctorName" type="text" class="form-control" id="doctorName" placeholder="Unesite ime ljekara" />
+                </div>
+                <div class="button-group">
+                    <button type="submit" class="btn btn-primary">Filter</button>
+                    <a href="@Url.Action("Index")" class="btn btn-secondary">Reset</a>
+                </div>
+            </div>
+        </form>
+    </div>
+    <table class="table table-striped mt-3">
+        <thead>
+            <tr>
+                <th>
+                    <a asp-action="Index"
+                       asp-route-sortOrder="@(Model.SortOrder == "patient_asc" ? "patient_desc" : "patient_asc")"
+                       asp-route-fromDate="@Model.FromDate?.ToString("yyyy-MM-dd")"
+                       asp-route-toDate="@Model.ToDate?.ToString("yyyy-MM-dd")">
+                        Pacijent @if (Model.SortOrder == "patient_asc")
+                        {
+                            <i class="fas fa-sort-up"></i>
+                        }
+                        else
+                        {
+                            <i class="fas fa-sort-down"></i>
+                        }
+                    </a>
+                </th>
+                <th>
+                    <a asp-action="Index"
+                       asp-route-sortOrder="@(Model.SortOrder == "date_asc" ? "date_desc" : "date_asc")"
+                       asp-route-fromDate="@Model.FromDate?.ToString("yyyy-MM-dd")"
+                       asp-route-toDate="@Model.ToDate?.ToString("yyyy-MM-dd")">
+                        Datum i vrijeme prijema @if (Model.SortOrder == "date_asc")
+                        {
+                            <i class="fas fa-sort-up"></i>
+                        }
+                        else
+                        {
+                            <i class="fas fa-sort-down"></i>
+                        }
+                    </a>
+                </th>
+                <th>
+                    <a asp-action="Index"
+                       asp-route-sortOrder="@(Model.SortOrder == "doctor_asc" ? "doctor_desc" : "doctor_asc")"
+                       asp-route-fromDate="@Model.FromDate?.ToString("yyyy-MM-dd")"
+                       asp-route-toDate="@Model.ToDate?.ToString("yyyy-MM-dd")">
+                        Nadležni ljekar @if (Model.SortOrder == "doctor_asc")
+                        {
+                            <i class="fas fa-sort-up"></i>
+                        }
+                        else
+                        {
+                            <i class="fas fa-sort-down"></i>
+                        }
+                    </a>
+                </th>
+                <th>
+                    <a asp-action="Index"
+                       asp-route-sortOrder="@(Model.SortOrder == "hitan_asc" ? "hitan_desc" : "hitan_asc")"
+                       asp-route-fromDate="@Model.FromDate?.ToString("yyyy-MM-dd")"
+                       asp-route-toDate="@Model.ToDate?.ToString("yyyy-MM-dd")">
+                        Hitan prijem @if (Model.SortOrder == "hitan_asc")
+                        {
+                            <i class="fas fa-sort-up"></i>
+                        }
+                        else
+                        {
+                            <i class="fas fa-sort-down"></i>
+                        }
+                    </a>
+                </th>
+                <th>Nalazi</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var admission in Model.Admissions)
+            {
+                <tr>
+                    <td>@(admission?.Patient?.FirstName) @(admission?.Patient?.LastName)</td>
+                    <td>@admission.PatientsAdmissionDateTime.ToString("g")</td>
+                    <td>@(admission?.Doctor?.LastName) @(admission?.Doctor?.FirstName) - @(admission?.Doctor?.DoctorCode)</td>
+                    <td class="center-content">
+                        @if (admission.EmergencyAdmission)
+                        {
+                            <i class="fas fa-exclamation-triangle text-danger" title="Hitan slučaj"></i>
+                        }
+                        else
+                        {
+                            <span>&nbsp;</span>
+                        }
+                    </td>
+                    <td>
+                        @if (!admission.Findings.Any())
+                        {
+                            <a asp-action="AddFinding" asp-route-admissionId="@admission.PatientsAdmissionId" class="icon-btn" title="Unesite nalaz">
+                                <i class="fas fa-plus"></i>
+                            </a>
+                        }
+                        else
+                        {
+                            @foreach (var finding in admission.Findings)
+                            {
+                                <div class="mt-2">
+                                    <div>
+                                        <a asp-action="EditFinding" asp-route-findingId="@finding.FindingId" class="icon-btn" title="Pregled/Izmjena nalaza">
+                                            <i class="fas fa-pen"></i>
+                                        </a>
+                                        <form asp-action="DeleteFinding" asp-route-findingId="@finding.FindingId" method="post" style="display:inline;">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="icon-btn" title="Uklonite nalaz" onclick="return confirm('Jeste li sigurni?')">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <a asp-controller="Admissions" asp-action="Create" class="btn btn-primary mt-3">Rezerviši novi termin</a>
+    <script>
+        function validateDateRange() {
+            const fromDate = document.getElementById("fromDate").value;
+            const toDate = document.getElementById("toDate").value;
+
+            document.getElementById("fromDateError").innerText = "";
+            document.getElementById("toDateError").innerText = "";
+
+            if (fromDate && toDate && fromDate > toDate) {
+                document.getElementById("fromDateError").innerText = "Datum od ne može biti noviji od datuma do.";
+                return false;
+            }
+            return true;
+        }
+    </script>
+</body>
+</html>

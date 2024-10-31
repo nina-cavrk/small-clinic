@@ -1,0 +1,27 @@
+﻿@model IEnumerable<SmallClinicProject.Models.Doctor>
+
+<h2>Lista uposlenika</h2>
+
+<table class="table table-striped mt-3">
+    <thead>
+        <tr>
+            <th>Ime</th>
+            <th>Prezime</th>
+            <th>Šifra</th>
+            <th>Titula</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var doctor in Model)
+        {
+            <tr>
+                <td>@(doctor?.FirstName ?? "N/A")</td>
+                <td>@(doctor?.LastName ?? "N/A")</td>
+                <td>@(doctor?.DoctorCode ?? "N/A")</td>
+                <td>@(doctor?.Title?.Name ?? "N/A")</td> <!-- Display Title Name -->
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-controller="Admissions" asp-action="Index" class="btn btn-secondary">Nazad</a>

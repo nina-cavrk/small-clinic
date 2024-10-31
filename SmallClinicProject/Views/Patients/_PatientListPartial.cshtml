@@ -1,0 +1,28 @@
+﻿@model IEnumerable<SmallClinicProject.Models.Patient>
+
+<!-- AJAX call -->
+<table class="table table-striped mt-3">
+    <thead>
+        <tr>
+            <th>Ime</th>
+            <th>Prezime</th>
+            <th>Datum rođenja</th>
+            <th>JMBG</th>
+            <th>Adresa</th>
+            <th>Broj telefona</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var patient in Model)
+        {
+            <tr>
+                <td>@(patient?.FirstName ?? "N/A")</td>
+                <td>@(patient?.LastName ?? "N/A")</td>
+                <td>@(patient.DateOfBirth.ToString("d"))</td>
+                <td>@(patient != null ? patient.UniqueIdentificationNumber.ToString() : "N/A")</td>
+                <td>@(patient?.Address ?? "N/A")</td>
+                <td>@(patient?.PhoneNumber ?? "N/A")</td>
+            </tr>
+        }
+    </tbody>
+</table>

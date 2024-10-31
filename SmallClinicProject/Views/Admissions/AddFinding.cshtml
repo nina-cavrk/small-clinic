@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Unos nalaza</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="mb-4">Unos nalaza</h2>
+
+        @model FindingViewModel
+
+        <form asp-action="AddFinding" method="post">
+            <input asp-for="AdmissionId" type="hidden" />
+
+            <div class="form-group">
+                <label asp-for="Description">Mišljenje ljekara</label>
+                <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="DateTimeOfFinding">Datum i vrijeme izdavanja nalaza</label>
+                <input asp-for="DateTimeOfFinding" class="form-control" readonly />
+                <span asp-validation-for="DateTimeOfFinding" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Sačuvaj</button>
+            <button type="button" class="btn btn-secondary" onclick="history.back()">Odustani</button>
+        </form>
+    </div>
+
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.5.1.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.19.1/jquery.validate.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate.unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
+</body>
+</html>
